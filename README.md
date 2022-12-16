@@ -1,17 +1,16 @@
-# Room Control is an IoT project to help you control your rooms' environment.
-
-WeatherTop V2 JavaScript edition
-
+# Room Control
+By Vidmantas Valskis
 
 
 ## Description
 
-A Web companion application for modular weather station WeatherTop 1000, V2 JavaScript edition.
+Room Control is an IoT project to help you control your rooms' environment. It measures Humidity levels in the room, saves the data in SQL dabatase, takes a photograph of window sill (because every morning there's puddles of water on it) and uploades it to the server. The mobile app, will allow you to see recent Humidity readings and the latest photograph as well as take the photograph on the Raspberry Pi.
 
 
 ## Dependencies
 
 * NodeJS
+* SQL database (MariaDB)
 
 
 ## Running app on local machine
