@@ -199,41 +199,63 @@ class ReadingsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 4,
+    // return GridView.builder(
+    //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //     crossAxisCount: 2,
+    //     childAspectRatio: 4,
+    //   ),
+    //   itemCount: readings.length,
+    //   itemBuilder: (context, index) {
+    //     return Column(
+    //       children: [
+    //         Text(
+    //           readings[index].humidity.toString(),
+    //           style: const TextStyle(
+    //             fontSize: 16,
+    //             fontWeight: FontWeight.bold,
+    //           ),
+    //         ),
+    //         Text(DateFormat('yy-MM-dd hh:mm:ss').format(readings[index].date))
+    //       ],
+    //     );
+    //     // return Image.network("http://vimo.lt/images/vimo512x194.png");
+    //     // return Image.network(readings[index].thumbnailUrl);
+    //   },
+    // );
+    return SizedBox(
+      width: double.infinity,
+      child: DataTable(
+        columns: const <DataColumn>[
+          DataColumn(
+            label: Text('Humidity'),
+          ),
+          DataColumn(
+            label: Text('Date'),
+          ),
+        ],
+        rows: List<DataRow>.generate(
+          readings.length,
+          (int index) => DataRow(
+            color: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              // All rows will have the same selected color.
+              if (states.contains(MaterialState.selected)) {
+                return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+              }
+              // Even rows will have a grey color.
+              if (index.isEven) {
+                return Colors.grey.withOpacity(0.3);
+              }
+              return null; // Use default value for other states and odd rows.
+            }),
+            cells: <DataCell>[
+              DataCell(Text(readings[index].humidity.toString())),
+              DataCell(Text(
+                  DateFormat('yy-MM-dd hh:mm:ss').format(readings[index].date)))
+            ],
+          ),
+        ),
       ),
-      itemCount: readings.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Text(
-              readings[index].humidity.toString(),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(DateFormat('yy-MM-dd hh:mm:ss').format(readings[index].date))
-          ],
-        );
-        // Column(
-        //   children: [
-        //     Text(
-        //       readings[index].humidity.toString(),
-        //       style: const TextStyle(
-        //         fontSize: 16,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //     Text(DateFormat('yy-MM-dd hh:mm:ss').format(readings[index].date))
-        //   ],
-        // );
-        // return Text(readings[index].humidity.toString());
-        // return Image.network("http://vimo.lt/images/vimo512x194.png");
-        // return Image.network(readings[index].thumbnailUrl);
-      },
     );
   }
 }
