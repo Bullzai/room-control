@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import 'models/reading.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+var counter = 0;
 
 DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -58,8 +63,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   String message = "";
+
+  Image img = Image.network("http://vimo.lt/images/iot/frame1.jpg");
   // Change this to your TCP server
   TcpSocketConnection socketConnection = TcpSocketConnection("vimo.lt", 25999);
 
@@ -87,29 +93,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void piTakePhoto() {
+    // setState(() {
+    //   // This call to setState tells the Flutter framework that something has
+    //   // changed in this State, which causes it to rerun the build method below
+    //   // so that the display can reflect the updated values.
+
+    //   // imageCache.clear();
+    //   // imageCache.clearLiveImages();
+    // });
     socketConnection.connect(5000, messageReceived);
     socketConnection.sendMessage(1.toString());
-    socketConnection.disconnect();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-    socketConnection.connect(5000, messageReceived);
-    socketConnection.sendMessage(_counter.toString());
     socketConnection.disconnect();
   }
 
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
+    // by the piTakePhoto method above.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -124,10 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('An error has occured!'),
             );
           } else if (snapshot.hasData) {
-            return Column(children: [
-              ReadingsList(readings: snapshot.data!),
-              Image.network("http://vimo.lt/images/vimo512x194.png")
-            ]);
+            return ReadingsList(readings: snapshot.data!);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -136,10 +133,32 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
       ),
       backgroundColor: Color.fromARGB(255, 254, 255, 184),
-      floatingActionButton: FloatingActionButton(
-        onPressed: piTakePhoto,
-        child: const Icon(Icons.camera_alt),
-      ),
+      floatingActionButton:
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        FloatingActionButton(
+          child: Icon(Icons.refresh),
+          onPressed: () {
+            // update the tables & photo
+            if (imageCache.liveImageCount > 0) {
+              imageCache.clear();
+              imageCache.clearLiveImages();
+            }
+            // imageCache.clear();
+            // imageCache.clearLiveImages();
+            counter++;
+            setState(() {});
+          },
+          heroTag: null,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        FloatingActionButton(
+          child: Icon(Icons.camera_alt),
+          onPressed: () => piTakePhoto(),
+          heroTag: null,
+        )
+      ]),
     );
   }
 }
@@ -151,41 +170,89 @@ class ReadingsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DataTable(
-        columns: const <DataColumn>[
-          DataColumn(
-            label: Text('Humidity'),
-          ),
-          DataColumn(
-            label: Text('Date'),
-          ),
-        ],
-        rows: List<DataRow>.generate(
-          // Number of rows to be displayed
-          readings.length - 5,
-          (int index) => DataRow(
-            color: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
-              // All rows will have the same selected color.
-              if (states.contains(MaterialState.selected)) {
-                return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-              }
-              // Even rows will have a grey color.
-              if (index.isEven) {
-                return Colors.grey.withOpacity(0.3);
-              }
-              return null; // Use default value for other states and odd rows.
-            }),
-            cells: <DataCell>[
-              DataCell(Text(readings[index].humidity.toString())),
-              DataCell(Text(
-                  DateFormat('yy-MM-dd hh:mm:ss').format(readings[index].date)))
-            ],
+    return Column(children: [
+      SizedBox(
+        width: double.infinity,
+        child: DataTable(
+          columns: const <DataColumn>[
+            DataColumn(
+              label: Text('Humidity'),
+            ),
+            DataColumn(
+              label: Text('Date'),
+            ),
+          ],
+          rows: List<DataRow>.generate(
+            // Number of rows to be displayed
+            readings.length - 5,
+            (int index) => DataRow(
+              color: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                // All rows will have the same selected color.
+                if (states.contains(MaterialState.selected)) {
+                  return Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withOpacity(0.08);
+                }
+                // Even rows will have a grey color.
+                if (index.isEven) {
+                  return Colors.grey.withOpacity(0.3);
+                }
+                return null; // Use default value for other states and odd rows.
+              }),
+              cells: <DataCell>[
+                DataCell(Text(readings[index].humidity.toString())),
+                DataCell(Text(DateFormat('yy-MM-dd hh:mm:ss')
+                    .format(readings[index].date)))
+              ],
+            ),
           ),
         ),
       ),
-    );
+//       FutureBuilder(
+//         // Paste your image URL inside the htt.get method as a parameter
+//         future: http.get(Uri.parse("http://vimo.lt/images/iot/frame1.jpg")),
+//         builder: (BuildContext context, AsyncSnapshot<http.Response> snapshot) {
+//           switch (snapshot.connectionState) {
+//             case ConnectionState.none:
+//               return Text('Press button to start.');
+//             case ConnectionState.active:
+//             case ConnectionState.waiting:
+//               return CircularProgressIndicator();
+//             case ConnectionState.done:
+//               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+//               // when we get the data from the http call, we give the bodyBytes to Image.memory for showing the image
+//               return Image.memory(snapshot.data!.bodyBytes);
+//           }
+// // unreachable
+//         },
+//       ), // Image(
+      //     image: CachedNetworkImageProvider(
+      //         "http://vimo.lt/images/iot/frame1.jpg")),
+      Image.network(
+        "http://vimo.lt/images/iot/frame1.jpg",
+        fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        key: ValueKey(new Random().nextInt(100)),
+      ),
+      // Image(
+      //   image: NetworkImage("http://vimo.lt/images/iot/frame1.jpg"),
+      //   key: ValueKey(new Random().nextInt(100)),
+      // )
+      // Image.network("http://vimo.lt/images/iot/frame1.jpg" +
+      //     "?v=${DateTime.now().millisecondsSinceEpoch}"),
+    ]);
   }
 }
