@@ -10,6 +10,8 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 ## Dependencies
 
 * NodeJS
+   * express
+   * multer
 * SQL database (MariaDB)
 
 
