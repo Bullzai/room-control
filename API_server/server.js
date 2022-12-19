@@ -1,13 +1,15 @@
 const express = require("express");
-// const cors = require("cors");
-
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/your/path/to/image/destination/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+});
+const upload = multer({ storage: storage });
 const app = express();
-
-// var corsOptions = {
-//   origin: "http://localhost:25998"
-// };
-
-// app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -20,6 +22,10 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to V IoT." });
 });
 
+app.post('/upload', upload.single('image'), function (req, res, next) {
+  console.log(req.file)
+  res.send("done");
+});
 require("./routes/routes.js")(app);
 
 // set port, listen for requests
