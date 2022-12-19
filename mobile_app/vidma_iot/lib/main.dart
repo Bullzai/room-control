@@ -71,19 +71,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // socketConnection.sendMessage("Message received from SERVER");
   }
 
-  // void startConnection() async {
-  //   socketConnection.enableConsolePrint(
-  //       true); //use this to see in the console what's happening
-  //   if (await socketConnection.canConnect(5000, attempts: 3)) {
-  //     //check if it's possible to connect to the endpoint
-  //     await socketConnection.connect(5000, messageReceived, attempts: 3);
-  //   }
-  // }
+  void startConnection() async {
+    socketConnection.enableConsolePrint(
+        true); //use this to see in the console what's happening
+    if (await socketConnection.canConnect(5000, attempts: 3)) {
+      //check if it's possible to connect to the endpoint
+      await socketConnection.connect(5000, messageReceived, attempts: 3);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // startConnection();
+    startConnection();
   }
 
   void piTakePhoto() {
