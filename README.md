@@ -10,6 +10,8 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 ## Dependencies
 
 * NodeJS
+   * express
+   * multer
 * SQL database (MariaDB)
 
 
@@ -66,3 +68,6 @@ Sources referred to during the development of the assignment:
 * [submit form](https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit)
 * [leaflet map events](https://leafletjs.com/reference.html#mouseevent)
 * [handlebars](https://handlebarsjs.com/api-reference/)
+
+
+https://github.com/expressjs/multer
