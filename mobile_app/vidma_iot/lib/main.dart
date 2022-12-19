@@ -138,10 +138,14 @@ class _MyHomePageState extends State<MyHomePage> {
         FloatingActionButton(
           child: Icon(Icons.refresh),
           onPressed: () {
+            print("pppppppp");
             // update the tables & photo
-            if (imageCache.liveImageCount > 0) {
+            // if (imageCache.liveImageCount > 0) {
+            if (message == "new_photo_arrived") {
+              print("aaaaaaaaaaaaaa");
               imageCache.clear();
               imageCache.clearLiveImages();
+              message = "";
             }
             // imageCache.clear();
             // imageCache.clearLiveImages();
@@ -245,7 +249,7 @@ class ReadingsList extends StatelessWidget {
             ),
           );
         },
-        key: ValueKey(new Random().nextInt(100)),
+        key: ValueKey(new Random().nextInt(1000)),
       ),
       // Image(
       //   image: NetworkImage("http://vimo.lt/images/iot/frame1.jpg"),
