@@ -17,6 +17,7 @@ const port = 25999;
 const server = net.createServer(onClientConnection);
 let pi;
 let piSock;
+let clientSock;
 // Keep track of the chat clients
 // let clients = [];
 
@@ -26,12 +27,14 @@ server.listen(port, function () {
 
 function onClientConnection(sock) {
   console.log(`${sock.remoteAddress}:${sock.remotePort} Connected`);
+  clientSock = sock;
   // Put this new client in the list
   // clients.push(sock);
   //Handle the client data.
   sock.on('data', function (data) {
     //Log data received from the client
     console.log(`>> data received : ${data} `);
+
 
     if (data == "Its a me, Mario") {
       pi = sock.remoteAddress + ":" + sock.remotePort;
@@ -51,6 +54,10 @@ function onClientConnection(sock) {
         // sock.end();
       } else if (data == 0) {
         sock.write("0");
+      } else if (data == "new_photo") {
+        console.log("new_photo");
+        sock.write("0");
+        clientSock.write("new_photo_arrived");
       } else {
         con.query(sql, function (err, result) {
           if (err) throw err;
