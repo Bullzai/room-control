@@ -39,7 +39,7 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 
 ## Acknowledgments
 
-Sources referred to during the development of the assignment:
+Sources referred to during the development of the project:
 * [Uploading files using node.js](https://github.com/expressjs/multer)
 * [Node.js API with Express](https://www.bezkoder.com/node-js-rest-api-express-mysql/)
 * [Libraries for Flutter](https://pub.dev/packages)
