@@ -10,16 +10,31 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 ## Dependencies
 
 * NodeJS
-   * npm install express
-   * npm install multer
-   * npm install mysql
+   ```
+   npm install express
+   npm install multer
+   npm install mysql
+   ```
 * SQL database (MariaDB)
-* Android Studio
+   * For CentOS follow https://mariadb.com/resources/blog/installing-mariadb-10-on-centos-7-rhel-7/
 * Flutter SDK
-   * Follow https://docs.flutter.dev/get-started/install
+   * Android Studio
+    * Follow https://docs.flutter.dev/get-started/install
 
 
-## Running app on local machine
+## Equipment needed
+
+* Raspberry Pi
+* SenseHat
+* Raspberry Pi Camera Module
+* Android device
+
+
+## Mobile app screenshots (Emulator & Android phone)
+![image](https://user-images.githubusercontent.com/29129335/208764457-0bf966ef-5d02-4c66-9ca3-81e1d52151fc.png)
+<img width="238" alt="image" src="https://user-images.githubusercontent.com/29129335/208767175-723ff1c5-c323-402b-b4a0-924f763810b2.png">
+
+
 
 * Open controllers/station.js and add your API key from openweathermap.org 
 ```
@@ -48,30 +63,14 @@ npm start
         * Added new pressure chart
         * Combined temperature and wind speed charts into one.
         * Code clean-up
-        
-* Weather Top JS - Release 4 v1.0
-    * This version includes all features in the previous release with few extra features:
-        * Auto generate reading from OpenWeaher using API
-        * Station Map view
-        * Graphical chart of temperature forecast
-        * Code clean-up
-
-* Weather Top JS - Release 3 v1.0
-    * Reworked app from Java with working features:
-        * Trends
-        * Date/Time stamp on each reading
-        * All Stations Summary
-        * Station/Reading delete support
-        * Members can edit their personal details
-    * Fully functional app with all methods in station analytic utility.
 
 
 ## Acknowledgments
 
 Sources referred to during the development of the assignment:
-* [submit form](https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit)
-* [leaflet map events](https://leafletjs.com/reference.html#mouseevent)
-* [handlebars](https://handlebarsjs.com/api-reference/)
+* [Uploading files using node.js](https://github.com/expressjs/multer)
+* [Node.js API with Express](https://www.bezkoder.com/node-js-rest-api-express-mysql/)
+* [Libraries for Flutter](https://pub.dev/packages)
 
 
-https://github.com/expressjs/multer
+
