@@ -17,9 +17,8 @@ const port = 25999;
 const server = net.createServer(onClientConnection);
 let pi;
 let piSock;
-let clientSock;
-// Keep track of the chat clients
-// let clients = [];
+// Keep track of the clients
+let clientSocks = [];
 
 server.listen(port, function () {
   console.log(`Server started on port ${port}`);
@@ -27,15 +26,14 @@ server.listen(port, function () {
 
 function onClientConnection(sock) {
   console.log(`${sock.remoteAddress}:${sock.remotePort} Connected`);
-  clientSock = sock;
   // Put this new client in the list
-  // clients.push(sock);
-  //Handle the client data.
+  clientSocks.push(sock);
+  // Handle the client data
   sock.on('data', function (data) {
     //Log data received from the client
     console.log(`>> data received : ${data} `);
 
-
+    // check if it's Pi who's sending the data
     if (data == "Its a me, Mario") {
       pi = sock.remoteAddress + ":" + sock.remotePort;
       piSock = sock;
@@ -44,20 +42,25 @@ function onClientConnection(sock) {
     } else if (sock.remoteAddress + ":" + sock.remotePort == pi) {
       const sql = `INSERT INTO readings (humidity,date) VALUES (${data},NOW())`;
 
-      if (data > 83.0) {
+      if (data > 75.0) {
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log("1 record inserted");
         });
+        // send a message to Pi to take a photo of your window sill if it reaches certain humidity %
         console.log("take_a_pic");
         sock.write("1");
-        // sock.end();
       } else if (data == 0) {
         sock.write("0");
       } else if (data == "new_photo") {
         console.log("new_photo");
         sock.write("0");
-        clientSock.write("new_photo_arrived");
+        // let every client know that new photo has been updloaded
+        clientSocks.forEach(function (connection, index) {
+          if (connection != piSock) {
+            connection.write("new_photo_arrived");
+          }
+        });
       } else {
         con.query(sql, function (err, result) {
           if (err) throw err;
@@ -66,26 +69,18 @@ function onClientConnection(sock) {
         });
       }
     } else if (data == 1 && pi != null) {
+      // got a request from clients to take a photo
       console.log(`${piSock} take_a_pic  ${sock}`);
       piSock.write("1");
-      sock.write("Not a PIIII");
+      sock.write("You're not pi!");
     }
-
-    //close the connection 
-    // sock.end();
   });
 
-  // // Remove the client from the list when it leaves
-  // sock.on('end', function () {
-  //   clients.splice(clients.indexOf(socket), 1);
-  //   broadcast(sock.name + " disconnected.\n");
-  // });
-  //Handle when client connection is closed
   sock.on('close', function () {
     console.log(`${sock.remoteAddress}:${sock.remotePort} Connection closed`);
   });
 
-  //Handle Client connection error.
+  // Handle Client connection error.
   sock.on('error', function (error) {
     console.error(`${sock.remoteAddress}:${sock.remotePort} Connection Error ${error}`);
   });
