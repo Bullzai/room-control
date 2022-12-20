@@ -31,7 +31,7 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 
 
 ## Mobile app screenshots (Emulator & Android phone)
-![image](https://user-images.githubusercontent.com/29129335/208764457-0bf966ef-5d02-4c66-9ca3-81e1d52151fc.png)
+<img width="261" alt="image" src="https://user-images.githubusercontent.com/29129335/208768270-57816965-197b-44ad-8c3e-3c253a82067c.png">
 <img width="238" alt="image" src="https://user-images.githubusercontent.com/29129335/208767175-723ff1c5-c323-402b-b4a0-924f763810b2.png">
 
 
