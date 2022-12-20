@@ -40,9 +40,9 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 
 ## Get started:
    1) Make sure you have all dependencies installed.
-   2) Upload API_server folder & tcp_server.js file to your VPS (Suggest using any Linux distro).
-   3) Change DB & port info inside of API_server/config/db.config.js and tcp_server.js
-   4) I suggest using screen or tmux for launching both servers:
+   2) Upload `API_server` folder & `tcp_server.js` file to your VPS (Suggest using any Linux distro).
+   3) Change Database & Port info inside of `API_server/config/db.config.js` and `tcp_server.js`
+   4) I suggest using `screen` or `tmux` for launching both servers:
       * `cd API_server` & `node server.js`
          * On successful launch you shoud see "Server is running on port 25998. Successfully connected to the database."
       * `node tcp_server.js`
@@ -54,6 +54,9 @@ Room Control is an IoT project to help you control your rooms' environment. It m
    6) You can either use Android Studio and an emulator, or install the app directly with APK package included in the latest release.
    7) Control your room.
 
+## Tips:
+   * You can use `screen` or `tmux` on any linux distro to launch the servers and be able to return to their terminal/console at any given time.
+   * You can set up `humid-sensor.py` script on your Raspberry Pi `crontab -e` to launch on it's own after every reboot - `@reboot sleep 30 && python3 /home/pi/scripts/humid-sensor.py > /dev/null 2>&1`
 
 ## Acknowledgments
 
