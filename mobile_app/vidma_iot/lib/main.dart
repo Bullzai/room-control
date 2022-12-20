@@ -1,16 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 import 'models/reading.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-var counter = 0;
-
-DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+import 'widgets/readings_list.dart';
 
 List<Reading> parseReadings(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -19,8 +12,8 @@ List<Reading> parseReadings(String responseBody) {
 
 Future<List<Reading>> fetchReadings() async {
   final response =
-      // Change this to your API readings
-      await http.get(Uri.parse('http://vimo.lt:25998/api/readings/latest10'));
+      // Change this to your API readings.
+      await http.get(Uri.parse('http://vimo.lt:25998/api/readings/latest5'));
   if (response.statusCode == 200) {
     return parseReadings(response.body);
   } else {
@@ -64,24 +57,26 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String message = "";
-
+  // Change this to your photo URL.
   Image img = Image.network("http://vimo.lt/images/iot/frame1.jpg");
-  // Change this to your TCP server
+  // Change this to your TCP server.
   TcpSocketConnection socketConnection = TcpSocketConnection("vimo.lt", 25999);
 
-  // Receiving and sending back a custom message
+  // Receiving and sending back a custom message.
   void messageReceived(String msg) {
+    // This call to setState tells the Flutter framework that something has
+    // changed in this State, which causes it to rerun the build method below
+    // so that the display can reflect the updated values.
     setState(() {
       message = msg;
     });
-    // socketConnection.sendMessage("Message received from SERVER");
   }
 
   void startConnection() async {
     socketConnection.enableConsolePrint(
-        true); //use this to see in the console what's happening
+        true); // Use this to see in the console what's happening.
     if (await socketConnection.canConnect(5000, attempts: 3)) {
-      //check if it's possible to connect to the endpoint
+      // Check if it's possible to connect to the endpoint.
       await socketConnection.connect(5000, messageReceived, attempts: 3);
     }
   }
@@ -92,15 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
     startConnection();
   }
 
+  // Sends a message to TCP server, which will then in turn tell Rasberry Pi to take a photo.
   void piTakePhoto() {
-    // setState(() {
-    //   // This call to setState tells the Flutter framework that something has
-    //   // changed in this State, which causes it to rerun the build method below
-    //   // so that the display can reflect the updated values.
-
-    //   // imageCache.clear();
-    //   // imageCache.clearLiveImages();
-    // });
     socketConnection.connect(5000, messageReceived);
     socketConnection.sendMessage(1.toString());
     socketConnection.disconnect();
@@ -108,8 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the piTakePhoto method above.
+    // This method is rerun every time setState is called, for instance as done by the piTakePhoto method above.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -138,18 +125,15 @@ class _MyHomePageState extends State<MyHomePage> {
         FloatingActionButton(
           child: Icon(Icons.refresh),
           onPressed: () {
-            print("pppppppp");
-            // update the tables & photo
-            // if (imageCache.liveImageCount > 0) {
-            if (message == "new_photo_arrived") {
-              print("aaaaaaaaaaaaaa");
+            // Prevent app crash by checking if there's any cached images and if
+            // TCP server has already sent a message that a new photo has been uploaded.
+            if (imageCache.liveImageCount > 0 &&
+                message == "new_photo_arrived") {
               imageCache.clear();
               imageCache.clearLiveImages();
               message = "";
             }
-            // imageCache.clear();
-            // imageCache.clearLiveImages();
-            counter++;
+            // Set State to force a rerun of build method (update screen in other words).
             setState(() {});
           },
           heroTag: null,
@@ -164,99 +148,5 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ]),
     );
-  }
-}
-
-class ReadingsList extends StatelessWidget {
-  const ReadingsList({super.key, required this.readings});
-
-  final List<Reading> readings;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      SizedBox(
-        width: double.infinity,
-        child: DataTable(
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Text('Humidity'),
-            ),
-            DataColumn(
-              label: Text('Date'),
-            ),
-          ],
-          rows: List<DataRow>.generate(
-            // Number of rows to be displayed
-            readings.length - 5,
-            (int index) => DataRow(
-              color: MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) {
-                // All rows will have the same selected color.
-                if (states.contains(MaterialState.selected)) {
-                  return Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withOpacity(0.08);
-                }
-                // Even rows will have a grey color.
-                if (index.isEven) {
-                  return Colors.grey.withOpacity(0.3);
-                }
-                return null; // Use default value for other states and odd rows.
-              }),
-              cells: <DataCell>[
-                DataCell(Text(readings[index].humidity.toString())),
-                DataCell(Text(DateFormat('yy-MM-dd hh:mm:ss')
-                    .format(readings[index].date)))
-              ],
-            ),
-          ),
-        ),
-      ),
-//       FutureBuilder(
-//         // Paste your image URL inside the htt.get method as a parameter
-//         future: http.get(Uri.parse("http://vimo.lt/images/iot/frame1.jpg")),
-//         builder: (BuildContext context, AsyncSnapshot<http.Response> snapshot) {
-//           switch (snapshot.connectionState) {
-//             case ConnectionState.none:
-//               return Text('Press button to start.');
-//             case ConnectionState.active:
-//             case ConnectionState.waiting:
-//               return CircularProgressIndicator();
-//             case ConnectionState.done:
-//               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-//               // when we get the data from the http call, we give the bodyBytes to Image.memory for showing the image
-//               return Image.memory(snapshot.data!.bodyBytes);
-//           }
-// // unreachable
-//         },
-//       ), // Image(
-      //     image: CachedNetworkImageProvider(
-      //         "http://vimo.lt/images/iot/frame1.jpg")),
-      Image.network(
-        "http://vimo.lt/images/iot/frame1.jpg",
-        fit: BoxFit.cover,
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent? loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
-          );
-        },
-        key: ValueKey(new Random().nextInt(1000)),
-      ),
-      // Image(
-      //   image: NetworkImage("http://vimo.lt/images/iot/frame1.jpg"),
-      //   key: ValueKey(new Random().nextInt(100)),
-      // )
-      // Image.network("http://vimo.lt/images/iot/frame1.jpg" +
-      //     "?v=${DateTime.now().millisecondsSinceEpoch}"),
-    ]);
   }
 }
