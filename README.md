@@ -13,6 +13,7 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 * SenseHat
 * Raspberry Pi Camera Module
 * Android device
+* VPS
 
 
 ## Dependencies
