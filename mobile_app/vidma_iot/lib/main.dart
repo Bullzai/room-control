@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
-import 'models/reading.dart';
 import 'package:http/http.dart' as http;
+import 'models/reading.dart';
 import 'widgets/readings_list.dart';
 
 List<Reading> parseReadings(String responseBody) {

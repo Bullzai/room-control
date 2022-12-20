@@ -31,11 +31,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  socket_io_client: ^2.0.0
   tcp_socket_connection: ^0.3.1
   http: ^0.13.5
   intl: ^0.17.0
-  cached_network_image: ^3.2.3
 
   
   # The following adds the Cupertino Icons font to your application.
