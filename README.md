@@ -10,9 +10,13 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 ## Dependencies
 
 * NodeJS
-   * express
-   * multer
+   * npm install express
+   * npm install multer
+   * npm install mysql
 * SQL database (MariaDB)
+* Android Studio
+* Flutter SDK
+   * Follow https://docs.flutter.dev/get-started/install
 
 
 ## Running app on local machine
