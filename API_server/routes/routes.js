@@ -12,7 +12,7 @@ module.exports = app => {
   // Retrieve 5 latest readings
   router.get("/latest5", readings.findLatest5);
 
-  // Retrieve all published readings
+  // Retrieve all highest readings
   router.get("/highest", readings.findHighestHumidity);
 
   // Retrieve a single Reading with id
