@@ -34,7 +34,7 @@ Reading.findById = (id, result) => {
       return;
     }
 
-    // not found reading with the id
+    // reading with the id not found
     result({ kind: "not_found" }, null);
   });
 };
@@ -58,8 +58,8 @@ Reading.getAll = (id, result) => {
   });
 };
 
-Reading.getLatest10 = (id, result) => {
-  let query = "SELECT * FROM readings ORDER BY DATE DESC LIMIT 10";
+Reading.getLatest5 = (id, result) => {
+  let query = "SELECT * FROM readings ORDER BY DATE DESC LIMIT 5";
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -73,8 +73,8 @@ Reading.getLatest10 = (id, result) => {
   });
 };
 
-Reading.getAllPublished = result => {
-  sql.query("SELECT * FROM readings WHERE published=true", (err, res) => {
+Reading.getHighestHumidity = result => {
+  sql.query("SELECT * FROM readings WHERE humidity > 75", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -82,61 +82,6 @@ Reading.getAllPublished = result => {
     }
 
     console.log("readings: ", res);
-    result(null, res);
-  });
-};
-
-// Reading.updateById = (id, reading, result) => {
-//   sql.query(
-//     "UPDATE readings SET title = ?, humidity = ?, published = ? WHERE id = ?",
-//     [reading.title, reading.humidity, reading.published, id],
-//     (err, res) => {
-//       if (err) {
-//         console.log("error: ", err);
-//         result(null, err);
-//         return;
-//       }
-
-//       if (res.affectedRows == 0) {
-//         // not found Tutorial with the id
-//         result({ kind: "not_found" }, null);
-//         return;
-//       }
-
-//       console.log("updated tutorial: ", { id: id, ...tutorial });
-//       result(null, { id: id, ...tutorial });
-//     }
-//   );
-// };
-
-Reading.remove = (id, result) => {
-  sql.query("DELETE FROM readings WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found Tutorial with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted tutorial with id: ", id);
-    result(null, res);
-  });
-};
-
-Reading.removeAll = result => {
-  sql.query("DELETE FROM readings", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log(`deleted ${res.affectedRows} readings`);
     result(null, res);
   });
 };

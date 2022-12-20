@@ -41,10 +41,11 @@ exports.findAll = (req, res) => {
   });
 };
 
-exports.findLatest10 = (req, res) => {
+// Find the latest 5 readings
+exports.findLatest5 = (req, res) => {
   const title = req.query.title;
 
-  Reading.getLatest10(title, (err, data) => {
+  Reading.getLatest5(title, (err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -54,8 +55,8 @@ exports.findLatest10 = (req, res) => {
   });
 };
 
-exports.findAllPublished = (req, res) => {
-  Reading.getAllPublished((err, data) => {
+exports.findHighestHumidity = (req, res) => {
+  Reading.getHighestHumidity((err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -80,19 +81,4 @@ exports.findOne = (req, res) => {
       }
     } else res.send(data);
   });
-};
-
-// Update a Reading identified by the id in the request
-exports.update = (req, res) => {
-
-};
-
-// Delete a Reading with the specified id in the request
-exports.delete = (req, res) => {
-
-};
-
-// Delete all Readings from the database.
-exports.deleteAll = (req, res) => {
-
 };
