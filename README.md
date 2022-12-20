@@ -37,11 +37,6 @@ Room Control is an IoT project to help you control your rooms' environment. It m
 <img width="481" alt="image" src="https://user-images.githubusercontent.com/29129335/208773019-4f9f3b0a-4e67-4d50-9965-de7abb35de13.png">
 
 
-## Authors
-
-* Name : Vidmantas Valskis
-
-
 ## Acknowledgments
 
 Sources referred to during the development of the assignment:
