@@ -7,67 +7,59 @@ By Vidmantas Valskis
 Room Control is an IoT project to help you control your rooms' environment. It measures Humidity levels in the room, saves the data in SQL dabatase, takes a photograph of window sill (because every morning there's puddles of water on it) and uploades it to the server. The mobile app, will allow you to see recent Humidity readings and the latest photograph as well as take the photograph on the Raspberry Pi.
 
 
+## Equipment needed
+
+* Raspberry Pi
+* SenseHat
+* Raspberry Pi Camera Module
+* Android device
+
+
 ## Dependencies
 
 * NodeJS
-   * express
-   * multer
+   ```
+   npm install express
+   npm install multer
+   npm install mysql
+   ```
 * SQL database (MariaDB)
+   * For CentOS follow https://mariadb.com/resources/blog/installing-mariadb-10-on-centos-7-rhel-7/
+* Flutter SDK
+   * Android Studio
+    * Follow https://docs.flutter.dev/get-started/install
 
 
-## Running app on local machine
+## Mobile app screenshots (Emulator & Android phone)
+<img width="261" alt="image" src="https://user-images.githubusercontent.com/29129335/208768270-57816965-197b-44ad-8c3e-3c253a82067c.png"><img width="238" alt="image" src="https://user-images.githubusercontent.com/29129335/208767175-723ff1c5-c323-402b-b4a0-924f763810b2.png">
 
-* Open controllers/station.js and add your API key from openweathermap.org 
-```
-const apiKey = "API_KEY"
-```
-Then:
-```
-cd project-folder/
-npm install
-npm start
-```
+## Workflow & Logic
+<img width="481" alt="image" src="https://user-images.githubusercontent.com/29129335/208773019-4f9f3b0a-4e67-4d50-9965-de7abb35de13.png">
 
 
-## Authors
-
-* Name : Vidmantas Valskis
-
-
-## Version History
-
-* Weather Top JS - Release 4 v1.1
-    * This version includes all features in the previous release with few changes:
-        * Updated map functionality:
-            * Left click on marker to see stations info
-            * Right click on map to quickly create a new station.
-        * Added new pressure chart
-        * Combined temperature and wind speed charts into one.
-        * Code clean-up
-        
-* Weather Top JS - Release 4 v1.0
-    * This version includes all features in the previous release with few extra features:
-        * Auto generate reading from OpenWeaher using API
-        * Station Map view
-        * Graphical chart of temperature forecast
-        * Code clean-up
-
-* Weather Top JS - Release 3 v1.0
-    * Reworked app from Java with working features:
-        * Trends
-        * Date/Time stamp on each reading
-        * All Stations Summary
-        * Station/Reading delete support
-        * Members can edit their personal details
-    * Fully functional app with all methods in station analytic utility.
+## Get started:
+   1) Make sure you have all dependencies installed.
+   2) Upload API_server folder & tcp_server.js file to your VPS (Suggest using any Linux distro).
+   3) Change DB & port info inside of API_server/config/db.config.js and tcp_server.js
+   4) I suggest using screen or tmux for launching both servers:
+      * `cd API_server` & `node server.js`
+         * On successful launch you shoud see "Server is running on port 25998. Successfully connected to the database."
+      * `node tcp_server.js`
+         * On successful launch you shoud see "Server started on port 25999".
+   5) Upload pi_scripts/humid-sensor.py to your Raspberry Pi, place it in your room and run the script:
+      * `python3 humid-sensor.py`
+         * On successful launch you shoud see "pi connected" in your TCP server terminal (window).
+         * You can modifty the `frequency` variable in humid-sensor.py to adjust how often Pi is going to send readings to TCP server.
+   6) You can either use Android Studio and an emulator, or install the app directly with APK package included in the latest release.
+   7) Control your room.
 
 
 ## Acknowledgments
 
-Sources referred to during the development of the assignment:
-* [submit form](https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit)
-* [leaflet map events](https://leafletjs.com/reference.html#mouseevent)
-* [handlebars](https://handlebarsjs.com/api-reference/)
+Sources referred to during the development of the project:
+* [Uploading files using node.js](https://github.com/expressjs/multer)
+* [Node.js API with Express](https://www.bezkoder.com/node-js-rest-api-express-mysql/)
+* [Libraries for Flutter](https://pub.dev/packages)
 
 
-https://github.com/expressjs/multer
+
