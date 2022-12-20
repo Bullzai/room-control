@@ -25,7 +25,7 @@ Room Control is an IoT project to help you control your rooms' environment. It m
    ```
 * SQL database (MariaDB)
    * For CentOS follow https://mariadb.com/resources/blog/installing-mariadb-10-on-centos-7-rhel-7/
-   * run `room_control.sql` to create the database & table.
+   * Run `room_control.sql` to create the database & table.
 * Flutter SDK
    * Android Studio
     * Follow https://docs.flutter.dev/get-started/install
