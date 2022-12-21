@@ -52,7 +52,10 @@ Room Control is an IoT project to help you control your rooms' environment. It m
       * `python3 humid-sensor.py`
          * On successful launch you shoud see "pi connected" in your TCP server terminal (window).
          * You can modifty the `frequency` variable in humid-sensor.py to adjust how often Pi is going to send readings to TCP server.
-   6) You can either use Android Studio and an emulator, or install the app directly with APK package included in the latest release.
+   6) To run the mobile app you can:
+      * Use Android Studio and an emulator.
+      * Build it yourself using `flutter build apk` command in terminal.
+      * Install the app directly to your phone using `app-release.apk` package.
    7) Control your room.
 
 ## Tips:
